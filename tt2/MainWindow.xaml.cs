@@ -23,9 +23,6 @@ namespace tt2
     public partial class MainWindow : Window
     {
         public Network siec1 = new Network();
-        Vertex v1 = new Vertex();
-        Vertex v2 = new Vertex();
-
 
         private void newVertex_Click(object sender, RoutedEventArgs e)
         {
@@ -54,14 +51,6 @@ namespace tt2
         {
             InitializeComponent();
             siec1.vertices = new List<Vertex>();
-            List<int> e1 = new List<int>() { 2, 3 };
-            List<int> e2 = new List<int>() { 4 };
-            List<int> e3 = new List<int>() { 4 };
-            List<int> e4 = new List<int>() { };
-            siec1.CreateVertex2(1, e1);
-            siec1.CreateVertex2(2, e2);
-            siec1.CreateVertex2(3, e3);
-            siec1.CreateVertex2(4, e4);
             UpdateForm(siec1.vertices);
         }
         public void UpdateForm(List<Vertex> wierzcholki)
@@ -70,13 +59,13 @@ namespace tt2
             for(int f = 0; f<siec1.vertices.Count && f<10; f++)
             {
                 Vertex w = siec1.vertices[f];
-                string Edg = "";
+                //string Edg = "";
                 result += "\nw: " + w.index;
-                foreach (int i in w.Edges)
-                {
-                    Edg += " " + i.ToString();
-                }
-                result += ", k: " + Edg;
+                //foreach (int i in w.Edges)
+                //{
+                //    Edg += " " + i.ToString();
+                //}
+                //result += ", k: " + Edg;
             }
             textWierzcholki.Text = result;
             
@@ -97,9 +86,11 @@ namespace tt2
 
         private void wybierzWierchCentralnosc_DropDownOpened(object sender, EventArgs e)
         {
-            wybierzWierchCentralnosc.Items.Clear();
-            foreach (Vertex v in siec1.vertices)
-                wybierzWierchCentralnosc.Items.Add(v.index);
+            //wybierzWierchCentralnosc.Items.Clear();
+            //List<Vertex> sorted = siec1.vertices.OrderBy(v => v.index).ToList();
+            //foreach (Vertex v in sorted)
+            //    wybierzWierchCentralnosc.Items.Add(v.index);
+           
         }
 
         private void wybierzWierchCentralnosc_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -108,42 +99,42 @@ namespace tt2
             {   string index = e.AddedItems[0].ToString();
                 int vertexInt = Int32.Parse(index);
                 Vertex vertex = siec1.vertices.Find(vert => vert.index == vertexInt);
-                centralityResult.Text = vertex.Centrality().ToString();
+                //centralityResult.Text = vertex.Centrality().ToString();
                 closenessCentralityResult.Text = siec1.ClosenessCentrality(vertexInt).ToString();
-                influenceRangeResult.Text = siec1.InfluenceRange(vertexInt).ToString();
-                betweenessCentralityResult.Text = siec1.BetweenessCentrality(vertexInt).ToString();
-                CentralityInResult.Text = siec1.CentralityIn(vertexInt).ToString();
-                double centralityAll = 0;
-                double betwCentralityAll = 0;
-                double closCentralityAll = 0;
-                double inflRangeAll = 0;
-                double centrInAll = 0;
-                foreach(Vertex v in siec1.vertices)
-                {
-                    centralityAll += v.Centrality();
-                    betwCentralityAll += siec1.BetweenessCentrality(v.index);
-                    closCentralityAll += siec1.ClosenessCentrality(v.index);
-                    inflRangeAll += siec1.InfluenceRange(v.index);
-                    centrInAll += siec1.CentralityIn(v.index);
+                //influenceRangeResult.Text = siec1.InfluenceRange(vertexInt).ToString();
+                //betweenessCentralityResult.Text = siec1.BetweenessCentrality(vertexInt).ToString();
+                //CentralityInResult.Text = siec1.CentralityIn(vertexInt).ToString();
+                //double centralityAll = 0;
+                //double betwCentralityAll = 0;
+                //double closCentralityAll = 0;
+                //double inflRangeAll = 0;
+                //double centrInAll = 0;
+                //foreach(Vertex v in siec1.vertices)
+                //{
+                //    centralityAll += v.Centrality();
+                //    betwCentralityAll += siec1.BetweenessCentrality(v.index);
+                //    closCentralityAll += siec1.ClosenessCentrality(v.index);
+                //    inflRangeAll += siec1.InfluenceRange(v.index);
+                //    centrInAll += siec1.CentralityIn(v.index);
 
-                }
-                int all = siec1.vertices.Count;
-                centralityAll /= all;
-                betwCentralityAll /= all;
-                closCentralityAll /= all;
-                inflRangeAll /= all;
-                centrInAll /= all;
-                centralityResult_Av.Text = centralityAll.ToString();
-                closenessCentralityResult_Av.Text = closCentralityAll.ToString();
-                betweenessCentralityResult_Av.Text = betwCentralityAll.ToString();
-                influenceRangeResult_Av.Text = inflRangeAll.ToString();
-                CentralityInResult_Av.Text = centrInAll.ToString();
+                //}
+                //int all = siec1.vertices.Count;
+                //centralityAll /= all;
+                //betwCentralityAll /= all;
+                //closCentralityAll /= all;
+                //inflRangeAll /= all;
+                //centrInAll /= all;
+                //centralityResult_Av.Text = centralityAll.ToString();
+                //closenessCentralityResult_Av.Text = closCentralityAll.ToString();
+                //betweenessCentralityResult_Av.Text = betwCentralityAll.ToString();
+                //influenceRangeResult_Av.Text = inflRangeAll.ToString();
+                //CentralityInResult_Av.Text = centrInAll.ToString();
             }
         }
 
         private void openFileButton_Click(object sender, RoutedEventArgs e)
         {
-
+            
             OpenFileDialog op = new OpenFileDialog();
             op.InitialDirectory = "c:\\";
             op.Filter = "pliki txt (*.txt)|*.txt";
@@ -154,12 +145,47 @@ namespace tt2
             {
                 try
                 {
-                    MessageBox.Show("coś działa");
+                    StreamReader file = new StreamReader(op.FileName);
+                    string line;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        string[] words = line.Split('\t');
+                        int index = 0;
+                        int neighb;
+                        Int32.TryParse(words[0], out index);
+                        Int32.TryParse(words[1], out neighb);
+                        bool exists = false;
+                        bool secondExists = false;
+                        foreach(Vertex v in siec1.vertices)
+                        {
+                            if(v.index == index)
+                            {
+                                exists = true;
+                                v.Edges.Add(neighb);
+                            }
+                            if (v.index == neighb)
+                                secondExists = true;
+
+                        }
+                        if(!exists)
+                        {
+                            List<int> edges = new List<int>() { neighb };
+                            siec1.CreateVertex2(index, edges);
+                        }
+                        if (!secondExists)
+                            siec1.CreateVertex2(neighb, new List<int>());
+                    }
+
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Nie można wczytać pliku. Error: " + ex.Message);
+                    MessageBox.Show("Error: " + ex.Message);
                 }
+                wybierzWierchCentralnosc.Items.Clear();
+                List<Vertex> sorted = siec1.vertices.OrderBy(v => v.index).ToList();
+                foreach (Vertex v in sorted)
+                    wybierzWierchCentralnosc.Items.Add(v.index);
+                textWierzcholki.Text = "Wczytano";
             }
         }
     }
