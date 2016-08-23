@@ -280,6 +280,18 @@ namespace tt2
             }
             return result;
         }
+
+        public double Density()
+        {
+            double result = 0;
+            foreach(Vertex ver in vertices)
+            {
+                result += ver.Edges.Count;
+            }
+            double n = vertices.Count;
+            result /= (n * (n - 1));
+            return result;
+        }
         }
         public class Vertex
         {

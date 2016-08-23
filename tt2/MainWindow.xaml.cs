@@ -99,11 +99,11 @@ namespace tt2
             {   string index = e.AddedItems[0].ToString();
                 int vertexInt = Int32.Parse(index);
                 Vertex vertex = siec1.vertices.Find(vert => vert.index == vertexInt);
-                //centralityResult.Text = vertex.Centrality().ToString();
+                centralityResult.Text = vertex.Centrality().ToString();
                 closenessCentralityResult.Text = siec1.ClosenessCentrality(vertexInt).ToString();
-                //influenceRangeResult.Text = siec1.InfluenceRange(vertexInt).ToString();
-                //betweenessCentralityResult.Text = siec1.BetweenessCentrality(vertexInt).ToString();
-                //CentralityInResult.Text = siec1.CentralityIn(vertexInt).ToString();
+                influenceRangeResult.Text = siec1.InfluenceRange(vertexInt).ToString();
+                betweenessCentralityResult.Text = siec1.BetweenessCentrality(vertexInt).ToString();
+                CentralityInResult.Text = siec1.CentralityIn(vertexInt).ToString();
                 //double centralityAll = 0;
                 //double betwCentralityAll = 0;
                 //double closCentralityAll = 0;
@@ -145,6 +145,7 @@ namespace tt2
             {
                 try
                 {
+                    siec1.vertices.Clear();
                     StreamReader file = new StreamReader(op.FileName);
                     string line;
                     while ((line = file.ReadLine()) != null)
@@ -163,9 +164,13 @@ namespace tt2
                                 exists = true;
                                 v.Edges.Add(neighb);
                             }
-                            if (v.index == neighb)
+                            else if (v.index == neighb)
+                            {
                                 secondExists = true;
-
+                                if (ifUndirected.IsChecked == true)
+                                    v.Edges.Add(index);
+                            }
+                                
                         }
                         if(!exists)
                         {
@@ -173,7 +178,13 @@ namespace tt2
                             siec1.CreateVertex2(index, edges);
                         }
                         if (!secondExists)
-                            siec1.CreateVertex2(neighb, new List<int>());
+                            if (ifUndirected.IsChecked == true)
+                            {
+                                List<int> edg = new List<int>() { index };
+                                siec1.CreateVertex2(neighb, edg);
+                            }
+                            else
+                                siec1.CreateVertex2(neighb, new List<int>());
                     }
 
                 }
@@ -187,6 +198,36 @@ namespace tt2
                     wybierzWierchCentralnosc.Items.Add(v.index);
                 textWierzcholki.Text = "Wczytano";
             }
+        }
+
+        private void countAvButton_Click(object sender, RoutedEventArgs e)
+        {
+            double centralityAll = 0;
+            double betwCentralityAll = 0;
+            double closCentralityAll = 0;
+            double inflRangeAll = 0;
+            double centrInAll = 0;
+            foreach (Vertex v in siec1.vertices)
+            {
+                centralityAll += v.Centrality();
+                betwCentralityAll += siec1.BetweenessCentrality(v.index);
+                closCentralityAll += siec1.ClosenessCentrality(v.index);
+                inflRangeAll += siec1.InfluenceRange(v.index);
+                centrInAll += siec1.CentralityIn(v.index);
+
+            }
+            int all = siec1.vertices.Count;
+            centralityAll /= all;
+            betwCentralityAll /= all;
+            closCentralityAll /= all;
+            inflRangeAll /= all;
+            centrInAll /= all;
+            centralityResult_Av.Text = centralityAll.ToString();
+            closenessCentralityResult_Av.Text = closCentralityAll.ToString();
+            betweenessCentralityResult_Av.Text = betwCentralityAll.ToString();
+            influenceRangeResult_Av.Text = inflRangeAll.ToString();
+            CentralityInResult_Av.Text = centrInAll.ToString();
+            DensityResult.Text = siec1.Density().ToString();
         }
     }
 }

@@ -8,11 +8,13 @@
         Title="MainWindow" Height="452" Width="579">
     <Grid>
         <Button x:Name="newVertex" Content="Dodaj wierzchołek" HorizontalAlignment="Left" Margin="40,355,0,0" VerticalAlignment="Top" Width="130" Height="35" Click="newVertex_Click"/>
-        <TextBlock x:Name="textWierzcholki" HorizontalAlignment="Left" Margin="40,92,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textWierzcholki" HorizontalAlignment="Left" Margin="40,109,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
         <TextBox x:Name="vertexUserInput" HorizontalAlignment="Left" Height="23" Margin="40,317,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="130"/>
         <TextBlock x:Name="textCentralnosc" HorizontalAlignment="Left" Margin="310,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="1.327,2.188" Width="155"/>
         <Grid HorizontalAlignment="Left" Height="240" Margin="210,80,0,0" VerticalAlignment="Top" Width="320" RenderTransformOrigin="0.489,0.528">
             <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -43,8 +45,12 @@
             <Label x:Name="CentralityInLabel" Content="Centrality (indegree)" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="5" Height="26" Width="126"/>
             <TextBox x:Name="CentralityInResult" HorizontalAlignment="Center" Height="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="64" Grid.Column="1" Grid.Row="5"/>
             <TextBox x:Name="CentralityInResult_Av" HorizontalAlignment="Center" Height="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="64" Grid.Column="2" Grid.Row="5"/>
+            <Button x:Name="countAvButton" Content="Oblicz" HorizontalAlignment="Center" VerticalAlignment="Center" Width="64" Grid.Column="2" Grid.Row="7" Click="countAvButton_Click" Height="23"/>
+            <Label x:Name="DensityLabel" Content="Gęstość" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center"/>
+            <TextBox x:Name="DensityResult" HorizontalAlignment="Center" Height="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="64" Grid.Column="2" Grid.Row="6"/>
         </Grid>
-        <Button x:Name="openFileButton" Content="Otwórz plik..." HorizontalAlignment="Left" Margin="40,44,0,0" VerticalAlignment="Top" Width="75" Click="openFileButton_Click"/>
+        <Button x:Name="openFileButton" Content="Otwórz plik..." HorizontalAlignment="Left" Margin="40,55,0,0" VerticalAlignment="Top" Width="95" Click="openFileButton_Click"/>
+        <CheckBox x:Name="ifUndirected" Content="nieukierunkowany" HorizontalAlignment="Left" Margin="40,35,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
