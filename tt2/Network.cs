@@ -10,6 +10,19 @@ namespace tt2
     {
         public List<Vertex> vertices { get; set; }
 
+        public void CalculateFactors()
+        {
+            foreach(Vertex v in vertices)
+            {
+                int index = v.index;
+                v.indegreeCentralityValue = CentralityIn(index);
+                v.betweenessCentralityValue = BetweenessCentrality(index);
+                v.influenceRangeValue = InfluenceRange(index);
+                v.outdegreeCentralityValue = CentralityOut(index);
+                v.closenessCentralityValue = ClosenessCentrality(index);
+            }
+        }
+
         public int CountAllPaths()
         {
             int allPaths = 0;
@@ -70,12 +83,12 @@ namespace tt2
             return result;
         }
 
-        public double ClosenessCentrality(int index)
+        public float ClosenessCentrality(int index)
         {
-            double result = 0;
+            float result = 0;
             for(int i = 0; i<vertices.Count; i++)
             {
-                double a = CountDistance(index, vertices[i].index);
+                float a = CountDistance(index, vertices[i].index);
                 if (a != 0 && a !=Int32.MaxValue)
                     result += (1/a);
             }
@@ -147,7 +160,6 @@ namespace tt2
         //    }
         //}
 
-        
         public int CountShortestPathsContaining(int sourc, int dest, int cont)
         {
             int result = 0;
@@ -214,19 +226,19 @@ namespace tt2
             }
         }
 
-        public float AverageCentrality()
+        public float AverageCentrality() // przerobić
         {
             float result = 0;
             float NumberOfVertices = vertices.Count();
             foreach(Vertex v in vertices)
             {
-                result += v.Centrality();
+                result += v.indegreeCentralityValue;
             }
             result /= NumberOfVertices;
             return result;
         }
 
-        public List<int> MaxCentrality() // zwraca indeks wierzchołka i jego centralność
+        public List<int> MaxCentrality() // przerobić
         {
             int resultCentrality = 0;
             int vertexIndex = 0;
@@ -234,10 +246,10 @@ namespace tt2
             bool flag = false;
             foreach(Vertex v in vertices)
             {
-                if(v.Centrality() > resultCentrality)
+                if(v.indegreeCentralityValue > resultCentrality)
                 {
                     flag = true;
-                    resultCentrality = v.Centrality();
+                    resultCentrality = v.indegreeCentralityValue;
                     vertexIndex = v.index;
                 }
 
@@ -249,10 +261,10 @@ namespace tt2
             }
             foreach(Vertex v in vertices)
             {
-                if(v.Centrality() == resultCentrality && v.index != vertexIndex)
+                if(v.indegreeCentralityValue == resultCentrality && v.index != vertexIndex)
                 {
                     result.Add(v.index);
-                    result.Add(v.Centrality());
+                    result.Add(v.indegreeCentralityValue);
                 }
             }
             return result;
@@ -281,6 +293,14 @@ namespace tt2
             return result;
         }
 
+        public int CentralityOut(int index)
+        {
+            int result = 0;
+            Vertex vert1 = vertices.Find(vert => vert.index == index);
+            result = vert1.Edges.Count;
+            return result;
+        }
+
         public double Density()
         {
             double result = 0;
@@ -296,18 +316,18 @@ namespace tt2
         public class Vertex
         {
             public int index { get; set; }
-            public int weight { get; set; }
+            //public int weight { get; set; }
             public List<int> Edges;
             public int Distance { get; set; }
             public Vertex Parent;
             public bool visited = false;
             public int numberOfPaths { get; set; }
-
-            public int Centrality()
-            {
-                int result = Edges.Count();
-                return result;
-            }
+            public int indegreeCentralityValue { get; set; }
+            public int outdegreeCentralityValue { get; set; }
+            public float betweenessCentralityValue { get; set; }
+            public int influenceRangeValue { get; set; }
+            public float closenessCentralityValue { get; set; }
+            
         }
     }
 
