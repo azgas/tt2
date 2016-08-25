@@ -49,8 +49,8 @@ namespace tt2
         {
             Vertex newVert = new Vertex();
             newVert.index = v;
-            newVert.Edges = Edg;
-            newVert.Distance = Int32.MaxValue;
+            newVert.edges = Edg;
+            newVert.distance = Int32.MaxValue;
             int index = vertices.FindIndex(vert => vert.index == v);
             if (index >= 0)
                 vertices.RemoveAt(index);
@@ -113,29 +113,29 @@ namespace tt2
             int result = Int32.MaxValue;
             foreach (Vertex v in vertices)
             {
-                v.Distance = Int32.MaxValue;
-                v.Parent = null;
+                v.distance = Int32.MaxValue;
+                v.paren = null;
             }
             Vertex vert1 = vertices.Find(vert => vert.index == index1);
             Vertex vert2 = vertices.Find(vert => vert.index == index2);
-            vert1.Distance = 0;
+            vert1.distance = 0;
             Queue<Vertex> q = new Queue<Vertex>();
             q.Enqueue(vert1);
             while (q.Count != 0)
             {
                 Vertex current = q.Dequeue();
-                foreach (int neighbIndex in current.Edges)
+                foreach (int neighbIndex in current.edges)
                 {
                     Vertex neighb = vertices.Find(vert => vert.index == neighbIndex);
-                    if (neighb.Distance == Int32.MaxValue)
+                    if (neighb.distance == Int32.MaxValue)
                     {
-                        neighb.Distance = current.Distance + 1;
-                        neighb.Parent = current;
+                        neighb.distance = current.distance + 1;
+                        neighb.paren = current;
                         q.Enqueue(neighb);
                     }
                 }
             }
-            result = vert2.Distance;
+            result = vert2.distance;
             
             return result;
         }
@@ -179,8 +179,8 @@ namespace tt2
 
             foreach (Vertex v in vertices)
             {
-                v.Distance = Int32.MaxValue;
-                v.Parent = null;
+                v.distance = Int32.MaxValue;
+                v.paren = null;
                 v.numberOfPaths = 0;
             }
             if (index1 == index2)
@@ -189,7 +189,7 @@ namespace tt2
             {
                 Vertex vert1 = vertices.Find(vert => vert.index == index1);
                 Vertex vert2 = vertices.Find(vert => vert.index == index2);
-                vert1.Distance = 0;
+                vert1.distance = 0;
                 vert1.numberOfPaths = 1;
                 Queue<Vertex> q = new Queue<Vertex>();
                 Dictionary<Vertex, int> path_counts = new Dictionary<Vertex, int>();
@@ -197,25 +197,25 @@ namespace tt2
                 while (q.Count != 0)
                 {
                     Vertex current = q.Dequeue();
-                    foreach (int neighbIndex in current.Edges)
+                    foreach (int neighbIndex in current.edges)
                     {
                         Vertex neighb = vertices.Find(vert => vert.index == neighbIndex);
-                        if (neighb.Distance == Int32.MaxValue)
+                        if (neighb.distance == Int32.MaxValue)
                         {
-                            neighb.Distance = current.Distance + 1;
+                            neighb.distance = current.distance + 1;
                             neighb.numberOfPaths = current.numberOfPaths;
-                            neighb.Parent = current;
+                            neighb.paren = current;
                             q.Enqueue(neighb);
                         }
                         else
                         {
-                            if (neighb.Distance == current.Distance + 1)
+                            if (neighb.distance == current.distance + 1)
                             {
                                 neighb.numberOfPaths += current.numberOfPaths;
                             }
-                            if (neighb.Distance > current.Distance + 1)
+                            if (neighb.distance > current.distance + 1)
                             {
-                                neighb.Distance = current.Distance + 1;
+                                neighb.distance = current.distance + 1;
                                 neighb.numberOfPaths = current.numberOfPaths + 1;
                             }
                         }
@@ -226,27 +226,46 @@ namespace tt2
             }
         }
 
-        public float AverageCentrality() // przerobić
+        public float AverageFactor(int whichCase) 
         {
             float result = 0;
             float NumberOfVertices = vertices.Count();
             foreach(Vertex v in vertices)
             {
-                result += v.indegreeCentralityValue;
+                switch(whichCase)
+                {
+                    case 1:
+                        result += v.indegreeCentralityValue;
+                        break;
+                    case 2:
+                        result += v.outdegreeCentralityValue;
+                        break;
+                    case 3:
+                        result += v.closenessCentralityValue;
+                        break;
+                    case 4:
+                        result += v.betweenessCentralityValue;
+                        break;
+                    case 5:
+                        result += v.influenceRangeValue;
+                        break;
+                }
+                
             }
             result /= NumberOfVertices;
             return result;
         }
 
-        public List<int> MaxCentrality() // przerobić
+        public List<int> MaxCentrality(int whichCase) //przerobić jakoś żeby rozszerzyć na inne wskaźniki
         {
             int resultCentrality = 0;
             int vertexIndex = 0;
             List<int> result = new List<int>();
             bool flag = false;
-            foreach(Vertex v in vertices)
+
+            foreach (Vertex v in vertices)
             {
-                if(v.indegreeCentralityValue > resultCentrality)
+                if (v.indegreeCentralityValue > resultCentrality)
                 {
                     flag = true;
                     resultCentrality = v.indegreeCentralityValue;
@@ -285,7 +304,7 @@ namespace tt2
             int result = 0;
             foreach(Vertex v in vertices)
             {
-                if(v.Edges.Contains(index))
+                if(v.edges.Contains(index))
                 {
                     result += 1;
                 }
@@ -297,7 +316,7 @@ namespace tt2
         {
             int result = 0;
             Vertex vert1 = vertices.Find(vert => vert.index == index);
-            result = vert1.Edges.Count;
+            result = vert1.edges.Count;
             return result;
         }
 
@@ -306,7 +325,7 @@ namespace tt2
             double result = 0;
             foreach(Vertex ver in vertices)
             {
-                result += ver.Edges.Count;
+                result += ver.edges.Count;
             }
             double n = vertices.Count;
             result /= (n * (n - 1));
@@ -317,9 +336,9 @@ namespace tt2
         {
             public int index { get; set; }
             //public int weight { get; set; }
-            public List<int> Edges;
-            public int Distance { get; set; }
-            public Vertex Parent;
+            public List<int> edges;
+            public int distance { get; set; }
+            public Vertex paren;
             public bool visited = false;
             public int numberOfPaths { get; set; }
             public int indegreeCentralityValue { get; set; }

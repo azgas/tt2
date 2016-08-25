@@ -162,13 +162,13 @@ namespace tt2
                             if(v.index == index)
                             {
                                 exists = true;
-                                v.Edges.Add(neighb);
+                                v.edges.Add(neighb);
                             }
                             else if (v.index == neighb)
                             {
                                 secondExists = true;
                                 if (ifUndirected.IsChecked == true)
-                                    v.Edges.Add(index);
+                                    v.edges.Add(index);
                             }
                                 
                         }
