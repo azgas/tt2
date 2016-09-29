@@ -51,6 +51,7 @@
         </Grid>
         <Button x:Name="openFileButton" Content="Otwórz plik..." HorizontalAlignment="Left" Margin="40,55,0,0" VerticalAlignment="Top" Width="95" Click="openFileButton_Click"/>
         <CheckBox x:Name="ifUndirected" Content="nieukierunkowany" HorizontalAlignment="Left" Margin="40,35,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="testoweBet" HorizontalAlignment="Left" Height="30" Margin="326,350,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="79"/>
 
     </Grid>
 </Window>

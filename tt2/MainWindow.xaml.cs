@@ -60,7 +60,7 @@ namespace tt2
             {
                 Vertex w = siec1.vertices[f];
                 //string Edg = "";
-                result += "\nw: " + w.index;
+                result += "\nw: " + w.id;
                 //foreach (int i in w.Edges)
                 //{
                 //    Edg += " " + i.ToString();
@@ -98,11 +98,13 @@ namespace tt2
             if(wybierzWierchCentralnosc.SelectedIndex != -1)
             {   string index = e.AddedItems[0].ToString();
                 int vertexInt = Int32.Parse(index);
-                Vertex vertex = siec1.vertices.Find(vert => vert.index == vertexInt);
-                centralityResult.Text = vertex.Centrality().ToString();
+                Vertex vertex = siec1.vertices.Find(vert => vert.id == vertexInt);
+                centralityResult.Text = siec1.CentralityIn(vertexInt).ToString();
                 closenessCentralityResult.Text = siec1.ClosenessCentrality(vertexInt).ToString();
                 influenceRangeResult.Text = siec1.InfluenceRange(vertexInt).ToString();
-                betweenessCentralityResult.Text = siec1.BetweenessCentrality(vertexInt).ToString();
+                betweenessCentralityResult.Text = siec1.BetweennessCentrality(vertexInt).ToString();
+                siec1.BetweennessCentrality2();
+                testoweBet.Text = vertex.betweennessCentralityValue.ToString();
                 CentralityInResult.Text = siec1.CentralityIn(vertexInt).ToString();
                 //double centralityAll = 0;
                 //double betwCentralityAll = 0;
@@ -159,12 +161,12 @@ namespace tt2
                         bool secondExists = false;
                         foreach(Vertex v in siec1.vertices)
                         {
-                            if(v.index == index)
+                            if(v.id == index)
                             {
                                 exists = true;
                                 v.edges.Add(neighb);
                             }
-                            else if (v.index == neighb)
+                            else if (v.id == neighb)
                             {
                                 secondExists = true;
                                 if (ifUndirected.IsChecked == true)
@@ -193,9 +195,9 @@ namespace tt2
                     MessageBox.Show("Error: " + ex.Message);
                 }
                 wybierzWierchCentralnosc.Items.Clear();
-                List<Vertex> sorted = siec1.vertices.OrderBy(v => v.index).ToList();
+                List<Vertex> sorted = siec1.vertices.OrderBy(v => v.id).ToList();
                 foreach (Vertex v in sorted)
-                    wybierzWierchCentralnosc.Items.Add(v.index);
+                    wybierzWierchCentralnosc.Items.Add(v.id);
                 textWierzcholki.Text = "Wczytano";
             }
         }
@@ -209,11 +211,11 @@ namespace tt2
             double centrInAll = 0;
             foreach (Vertex v in siec1.vertices)
             {
-                centralityAll += v.Centrality();
-                betwCentralityAll += siec1.BetweenessCentrality(v.index);
-                closCentralityAll += siec1.ClosenessCentrality(v.index);
-                inflRangeAll += siec1.InfluenceRange(v.index);
-                centrInAll += siec1.CentralityIn(v.index);
+                centralityAll += siec1.CentralityIn(v.id);
+                betwCentralityAll += siec1.BetweennessCentrality(v.id);
+                closCentralityAll += siec1.ClosenessCentrality(v.id);
+                inflRangeAll += siec1.InfluenceRange(v.id);
+                centrInAll += siec1.CentralityIn(v.id);
 
             }
             int all = siec1.vertices.Count;
