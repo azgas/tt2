@@ -117,8 +117,8 @@ namespace tt2
                     List<Vertex> p = new List<Vertex>();
                     P.Add(v.id, p);
                 }
-                Dictionary<int, int> sigma = new Dictionary<int, int>();
-                Dictionary<int, int> d = new Dictionary<int, int>();
+                Dictionary<int, float> sigma = new Dictionary<int, float>();
+                Dictionary<int, float> d = new Dictionary<int, float>();
                 foreach (Vertex t in vertices)
                 {
                     if (t == s)
@@ -153,7 +153,7 @@ namespace tt2
                         }
                     }
                 }
-                Dictionary<int, int> delta = new Dictionary<int, int>();
+                Dictionary<int, float> delta = new Dictionary<int, float>();
                 foreach(Vertex v in vertices)
                     delta.Add(v.id, 0);
                 while (S.Count != 0)
@@ -168,10 +168,6 @@ namespace tt2
 
                 }
             }
-/*            if (allPaths == default(int))
-                allPaths = CountAllPaths();
-            foreach (Vertex v in vertices)
-                v.betweennessCentralityValue /= allPaths;*/
 
 
         }
